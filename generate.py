@@ -12,6 +12,11 @@ def is_whitelisted(categories, whitelist):
 			return True
 	return False
 
+def get_allowlisted_domains():
+	with open('allowlisted_domains.txt', "r", encoding="utf-8") as f:
+		ex = f.read().splitlines()
+		return ex
+
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
@@ -32,12 +37,14 @@ if __name__ == '__main__':
 							"session replay",
 							"third-party analytics marketing",
 							"unknown high risk behavior"]
+	
+	# categories that wont be blocked
 	categories_whitelist = ["CDN"]
 
 	fingerprinting_threshold = args.fingerprinting_threshold
 
 	# common domains that are blocked by this script
-	exclude_domains = ["twitter.com", "instagram.com", "amazon.com", "bing.com", "paypal.com", "walmart.com"]
+	exclude_domains = get_allowlisted_domains()
 
 	path = args.path
 	domains = set()
@@ -51,7 +58,10 @@ if __name__ == '__main__':
 					domain_json = json.load(f)
 
 					categories = domain_json['categories']
+					# get the primary domain
 					domain = domain_json['domain']
+					# get subdomains associated to block as well
+					sub_domains = domain_json['subdomains']
 
 					if domain_json['fingerprinting'] < fingerprinting_threshold:
 						continue
@@ -65,6 +75,9 @@ if __name__ == '__main__':
 						if cat in categories_to_block:
 							domains.add(domain)
 							print("adding domain: {}".format(domain))
+							for d in sub_domains:
+								domains.add(d + "." + domain)
+								print("adding sub-domain: {}".format(d))
 							break
 				except ValueError:
 					print ("Decoding JSON failed")
