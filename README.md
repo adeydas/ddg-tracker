@@ -12,4 +12,4 @@ To use this script offline, pull the [tracker-radar repo](https://github.com/duc
 At ddg-cron.sh. An example command would be: `./ddg-cron.sh -g '/Users/abhishek/Documents/work/ddg-tracker/generate.py' -f '2' -o '/tmp/final_output.txt'`.
 
 # Hosted list
-You can also integrate a hosted flavour directly into piHole from here: . The list is updated daily.
+You can also integrate a hosted flavour directly into piHole from here: https://scripts.deydasapps.com/ddg-tracker/ddg-tracker.txt. The list is updated daily.
